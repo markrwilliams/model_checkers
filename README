@@ -1,0 +1,7 @@
+Model Checking Playground!
+
+emc - An implementation of the Extended Model Checker (EMC), from:
+    E. M. Clarke, E. A. Emerson, and A. P. Sistla. 1986. Automatic
+    verification of finite-state concurrent systems using temporal
+    logic specifications. ACM Trans. Program. Lang. Syst. 8, 2 (April
+    1986), 244-263. DOI=http://dx.doi.org/10.1145/5397.5399
