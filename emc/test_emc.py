@@ -150,6 +150,26 @@ class TestTransitionGraph(object):
         assert graph.successors(('S2', 'S2')) == frozenset([('S4', 'S4')])
         assert graph.predecessors(('S4', 'S4')) == frozenset([('S2', 'S2')])
 
+    def test_stronglyConnectedComponents(self):
+        # CLRS, p 616
+        graph = TransitionGraph(
+            {"a": {"b"},
+             "b": {"c", "e"},
+             "c": {"d", "g"},
+             "d": {"c", "h"},
+             "e": {"a", "f"},
+             "f": {"g"},
+             "g": {"f", "h"},
+             "h": {"h"}},
+            initial="ignored")
+
+        components = graph.stronglyConnectedComponents()
+
+        assert components == set([frozenset(['a', 'b', 'e']),
+                                  frozenset(['c', 'd']),
+                                  frozenset(['f', 'g']),
+                                  frozenset(['h'])])
+
 
 class FakeModel(object):
 

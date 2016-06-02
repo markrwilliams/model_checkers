@@ -9,6 +9,8 @@ specifications. ACM Trans. Program. Lang. Syst. 8, 2 (April 1986),
 
 """
 from collections import deque
+from functools import partial
+import operator
 
 TRUE = 'TRUE'
 FALSE = 'FALSE'
@@ -79,6 +81,47 @@ class TransitionGraph(object):
 
     def states(self):
         return frozenset(self._successors) | frozenset(self._predecessors)
+
+    def stronglyConnectedComponents(self):
+        # CLRS, p. 615
+        visited = set()
+        finishingTimes = {}
+        time = [0]
+
+        def dfsG(node):
+            if node in visited:
+                return
+            visited.add(node)
+            for successor in self.successors(node):
+                dfsG(successor)
+            time[0] += 1
+            finishingTimes[node] = time[0]
+
+        for node in self.states():
+            dfsG(node)
+
+        visited = set()
+
+        def dfsT(node, component):
+            if node in visited:
+                return
+            visited.add(node)
+            component.add(node)
+            for predecessor in self.predecessors(node):
+                dfsT(predecessor, component)
+
+        decreasing = sorted(self.states(),
+                            key=partial(operator.getitem, finishingTimes),
+                            reverse=True)
+
+        components = set()
+        for node in decreasing:
+            component = set()
+            dfsT(node, component)
+            if component:
+                components.add(frozenset(component))
+
+        return components
 
 
 class Formula(object):
